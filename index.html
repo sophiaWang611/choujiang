@@ -2,190 +2,324 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>幸运转盘</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <link rel="stylesheet" href="wheelpage.css">
+    <title>幸运编号</title>
+    <style>
+        html,body{
+            height: 100%;
+        }
+        body {
+            background: #1E1E1E;
+            font-family: "SF Pro Text","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
+        }
+        #body {
+            display: -webkit-box;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #container {
+            border: 4px solid #000;
+            display: -webkit-box;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            border-left-width: 6px;
+            border-radius: 5px;
+            border-top-width: 6px;
+            border-bottom-width: 6px;
+        }
+        #container li {
+            width: 240px;
+            height: 150px;
+            line-height: 150px;
+            border-right: 4px solid #000;
+            text-align: center;
+            font-size: 100px;
+            font-family: "Times New Roman", Times, serif;
+            font-weight: bolder;
+            background-image:-webkit-linear-gradient(
+                    to bottom,
+                    #6b542a 0%,
+                    #e6bb42 25%,
+                    #fdd378 35%,
+                    rgb(247, 210, 131) 50%,
+                    #ebb739 65%,
+                    #db9f09 85%,
+                    #4c3106 100%);
+            background-image:linear-gradient(
+                    to bottom,
+                    #6b542a 0%,
+                    #e6bb42 25%,
+                    #fdd378 35%,
+                    rgb(247, 210, 131) 50%,
+                    #ebb739 65%,
+                    #9e7204 85%,
+                    #4c3106 100%);
+        }
+        #start-btn, #wheel-btn {
+            color: #fff;
+            font-size: 20px;
+            height: 50px;
+            width: 200px;
+            border-radius: 50px;
+            text-align: center;
+            line-height: 49px;
+            position: relative;
+            margin-left: 37%;
+            margin-top: 60px;
+            cursor: pointer;
+        }
+        .start-btn {
+            background-image:-webkit-linear-gradient(
+                    to bottom,
+                    #464545 0%,
+                    #000 100%);
+            background-image:linear-gradient(
+                    to bottom,
+                    #464545 0%,
+                    #000 100%);
+        }
+        .start-btn-click {
+            background-image:-webkit-linear-gradient(
+                    to bottom,
+                    #000 0%,
+                    #272727 100%);
+            background-image:linear-gradient(
+                    to bottom,
+                    #000 0%,
+                    #272727 100%);
+        }
+        #wheel-btn {
+            display: block;
+            text-decoration: none;
+        }
+        .wheel-btn {
+            background-image:-webkit-linear-gradient(
+                    to bottom,
+                    #ecbebe 0%,
+                    #e88282 100%);
+            background-image:linear-gradient(
+                    to bottom,
+                    #ecbebe 0%,
+                    #e88282 100%);
+        }
+        .wheel-btn-click {
+            background-image:-webkit-linear-gradient(
+                    to bottom,
+                    #e88282 0%,
+                    #ecbebe 100%);
+            background-image:linear-gradient(
+                    to bottom,
+                    #e88282 0%,
+                    #ecbebe 100%);
+        }
+        .mt-number-animate {
+            line-height:75px;
+            height: 75px;
+            overflow: hidden;
+            display: inline-block;
+            position: relative;
+            width: 240px;
+        }
+        .mt-number-animate .mt-number-animate-dot {
+            line-height: 75px;
+            float: left;
+            text-align: center;
+            width: 240px;
+        }
+        .mt-number-animate .mt-number-animate-dom{
+            text-align: center;
+            float: left;
+            position: relative;
+            top: 0;
+            width: 240px;
+        }
+
+        .mt-number-animate .mt-number-animate-dom .mt-number-animate-span{
+            width: 100%;
+            float: left;
+        }
+    </style>
 </head>
 <body>
-<div id="wheel-wrap">
-    <div id="w-tit">
-        幸运大转盘
-    </div>
-    <div id="w-main">
-        <div id="rotate">
-            <div id="pointer" v-on:click="handlebar"></div>
-            <div id="rotatein">
-                <div v-for="obj in rawardList" class="prize">
-                    <strong v-if="!obj.disabled">{{obj.name}}</strong>
-                    <strong v-if="obj.disabled" style="color:#ccc">{{obj.name}}</strong>
-                </div>
-            </div>
+    <div id="body">
+        <div>
+            <ul id="container">
+                <li id="num1">0</li>
+                <li id="num2">0</li>
+                <li id="num3">0</li>
+            </ul>
+            <div id="start-btn" class="start-btn">开始摇奖</div>
+            <a id="wheel-btn" href="wheel.html" class="wheel-btn">抽取奖品</a>
         </div>
     </div>
-    <div id="dialogbox">
-        <div class="dialogmask"></div>
-        <div class="dialogcard">
-            <div class="dialogclose">
-                <span class="closebtn"></span>
-            </div>
-            <div class="card1">
-                <div class="dialogtit">恭喜您获得</div>
-                <div class="dialogtit">🎊<strong>{{targetRaward.name}}</strong>🎊</div>
-                <div><img v-bind:src="targetRaward.image" width="150px"></div>
-            </div>
-        </div>
-    </div>
-</div>
-<script type="text/javascript">
-    setSize();
-    window.addEventListener("resize",setSize,false);
-    function setSize(){
-        var oHtml = document.getElementsByTagName("html")[0];
-        var oBody = document.getElementsByTagName("body")[0];
-        var oWidth = window.innerWidth < 480 ? window.innerWidth : 480;
-        oHtml.style.fontSize =oWidth/18+"px";
-        oBody.style.visibility = "visible";
-    };
-</script>
+</body>
 <script type="text/javascript" src="jquery.min.js"></script>
 <script type="text/javascript" src="underscore-min.js"></script>
 <script type="text/javascript" src="vue.min.js"></script>
+<script>
+    /**
+     *  by Mantou qq:676015863
+     *  数字滚动插件 v1.0
+     */
+    ;(function($) {
+        $.fn.numberAnimate = function(setting) {
+            var defaults = {
+                speed : 1000,//动画速度
+                num : "", //初始化值
+                iniAnimate : true, //是否要初始化动画效果
+                symbol : '',//默认的分割符号，千，万，千万
+                dot : 0 //保留几位小数点
+            };
+            var setting = $.extend(defaults, setting);
 
-<script type="text/javascript">
-    var rawardList = [{
-        name: "奖品1",
-        realName: "周大福小金牌",
-        rotate: 337.5,
-        image: "images/jingpai.jpeg",
-        disabled: false
-    },{
-        name: "奖品2",
-        realName: "小米手环",
-        rotate: 292.5,
-        image: "images/xiaomi-shouhuan.png",
-        disabled: false
-    },{
-        name: "奖品3",
-        realName: "小米电子秤",
-        rotate: 247.5,
-        image: "images/xiaomi-dianzicheng.png",
-        disabled: false
-    },{
-        name: "奖品4",
-        realName: "小米移动电源",
-        rotate: 202.5,
-        image: "images/xiaomi-yidongdy.png",
-        disabled: false
-    },{
-        name: "奖品5",
-        realName: "小米移动电源",
-        rotate: 157.5,
-        image: "images/xiaomi-yidongdy.png",
-        disabled: false
-    },{
-        name: "奖品6",
-        realName: "小米移动电源",
-        rotate: 112.5,
-        image: "images/xiaomi-yidongdy.png",
-        disabled: false
-    },{
-        name: "奖品7",
-        realName: "刀具套装",
-        rotate: 67.5,
-        image: "images/daoju.jpeg",
-        disabled: false
-    },{
-        name: "奖品8",
-        realName: "锅子三件套",
-        rotate: 22.5,
-        image: "images/guozisanjiant.jpeg",
-        disabled: false
-    }];
-    //window.localStorage.setItem('raward', JSON.stringify(rawardList));
-    if (!_.isEmpty(window.localStorage.getItem("raward"))) {
-        rawardList = JSON.parse(window.localStorage.getItem("raward"));
-    }
-
-    var emptyObj = {name: '', realName: '', image: ''};
-
-    var app = new Vue({
-        el: "#wheel-wrap",
-        data: {
-            rawardMap: rawardList,
-            initrotate: 0,
-            targetRaward: emptyObj
-        },
-        watch: {
-            targetRaward: function(value) {
-                if (_.isEmpty(value.realName)) {
-                    $("#dialogbox").hide();
-                } else {
-                    $("#dialogbox").show();
-                }
+            if($(this).length > 1){
+                return alert("just only one obj!");
             }
-        },
-        methods: {
-            raward: function(rotate) {
-                var rawardObj = _.findWhere(this.rawardMap, {rotate: rotate});
-                rawardObj.disabled = true;
-                rawardObj.name = rawardObj.realName;
-                window.localStorage.setItem('raward', JSON.stringify(this.rawardMap));
-                return rawardObj;
-            },
-            handlebar: function() {
-                if (_.findIndex(this.rawardMap, {disabled: false}) < 0) {
-                    return alert("所有奖品已抽完");
+
+            if(setting.num == ""){
+                alert("must set a num!");
+                return;
+            }
+            var nHtml = '<div class="mt-number-animate-dom" data-num="{{num}}"><span class="mt-number-animate-span">0</span> <span class="mt-number-animate-span">1</span><span class="mt-number-animate-span">2</span> <span class="mt-number-animate-span">3</span> <span class="mt-number-animate-span">4</span> <span class="mt-number-animate-span">5</span> <span class="mt-number-animate-span">6</span> <span class="mt-number-animate-span">7</span> <span class="mt-number-animate-span">8</span><span class="mt-number-animate-span">9</span></div>';
+
+            var numToArr = function(num){
+                num = parseFloat(num).toFixed(setting.dot);
+                if(typeof(num) == 'number'){
+                    var arrStr = num.toString().split("");
+                }else{
+                    var arrStr = num.split("");
                 }
-                var rotate = this.initrotate + (360 - this.initrotate%360) + 360 + this.posibility();
-                $("#rotatein").css({
-                    "-webkit-transition": "all 2s ease-out",
-                    "-ms-transition": "all 2s ease-out",
-                    "transition":" all 2s ease-out",
-                    "-webkit-transform": "rotate("+ rotate +"deg)",
-                    "-moz-transform": "rotate("+ rotate +"deg)",
-                    "-ms-transform": "rotate("+ rotate +"deg)",
-                    "-o-transform": "rotate("+ rotate +"deg)",
-                    "transform":"rotate("+ rotate +"deg)"
+                return arrStr;
+            };
+
+            //设置DOM symbol:分割符号
+            var setNumDom = function(arrStr){
+                var shtml = '<div class="mt-number-animate">';
+                for(var i=0,len=arrStr.length; i<len; i++){
+                    shtml += nHtml.replace("{{num}}", arrStr[i]);
+                }
+                shtml += '</div>';
+                return shtml;
+            };
+
+            var runAnimate = function($parent){
+                $parent.find(".mt-number-animate-dom").each(function() {
+                    var num = $(this).attr("data-num");
+                    var spanHei = $(this).height()/10;
+                    var thisTop = -(num*spanHei)+"px";
+                    if(thisTop != $(this).css("top")){
+                        if(setting.iniAnimate){
+                            if(!window.applicationCache){
+                                $(this).animate({
+                                    top : thisTop
+                                }, setting.speed);
+                            }else{
+                                $(this).css({
+                                    'transform':'translateY('+thisTop+')',
+                                    '-ms-transform':'translateY('+thisTop+')',   /* IE 9 */
+                                    '-moz-transform':'translateY('+thisTop+')',  /* Firefox */
+                                    '-webkit-transform':'translateY('+thisTop+')', /* Safari 和 Chrome */
+                                    '-o-transform':'translateY('+thisTop+')',
+                                    '-ms-transition':setting.speed/1000+'s',
+                                    '-moz-transition':setting.speed/1000+'s',
+                                    '-webkit-transition':setting.speed/1000+'s',
+                                    '-o-transition':setting.speed/1000+'s',
+                                    'transition':setting.speed/1000+'s'
+                                });
+                            }
+                        }else{
+                            setting.iniAnimate = true;
+                            $(this).css({
+                                top : thisTop
+                            });
+                        }
+                    }
                 });
-                this.initrotate = rotate;
-                setTimeout(function() {
-                    app.targetRaward = app.raward(rotate%360);
-                }, 2000);
-            },
-            posibility: function() {
-                var random = parseInt(Math.random()*1000);
-                var posibility = 22.5;
-                if (random == 1) {
-                    posibility = 337.5;
-                } else if ( 1 < random && random <= 40 ) {
-                    posibility = 247.5;
-                } else if( 40 < random && random <= 200 ) {
-                    posibility = 157.5;
-                } else if( 201 < random && random <= 400 ) {
-                    posibility = 67.5;
-                } else if( 401 < random && random <= 550 ) {
-                    posibility = 292.5;
-                } else if( 551 < random && random <= 700) {
-                    posibility = 202.5;
-                } else if( 701 < random && random <= 850) {
-                    posibility = 112.5;
-                }
-                var index = this.getNearestRotate(_.findIndex(this.rawardMap, {rotate: posibility}));
-                return this.rawardMap[index].rotate;
-            },
-            getNearestRotate: function(currentIndex) {
-                if (currentIndex >= this.rawardMap.length) return this.getNearestRotate(0);
-                if (!this.rawardMap[currentIndex].disabled) return currentIndex;
-                return this.getNearestRotate(currentIndex + 1);
-            }
-        }
-    });
+            };
 
-    $(function () {
-        //点击
-        $(".closebtn ").click(function () {app.targetRaward = emptyObj;});
-        $(".dialogmask").click(function () {app.targetRaward = emptyObj;});
+            var init = function($parent){
+                $parent.html(setNumDom(numToArr(setting.num)));
+                runAnimate($parent);
+            };
+
+            init($(this));
+            return this;
+        }
+    })(jQuery);
+
+    $(function(){
+        var $startBtn = $("#start-btn"), $num1 = $("#num1"), $num2 = $("#num2"), $num3 = $("#num3");
+        var $showWheel = $("#wheel-btn");
+        var personCount = 300;
+
+        $startBtn.show();
+        $showWheel.hide();
+
+        $startBtn.mousedown(function() {
+            $startBtn.toggleClass("start-btn");
+            $startBtn.toggleClass("start-btn-click");
+        });
+        $startBtn.mouseup(function() {
+            $startBtn.toggleClass("start-btn");
+            $startBtn.toggleClass("start-btn-click");
+        });
+        $startBtn.mouseleave(function() {
+            if ($startBtn.hasClass("start-btn")) return;
+            $startBtn.toggleClass("start-btn");
+            $startBtn.toggleClass("start-btn-click");
+        });
+        $showWheel.mousedown(function() {
+            $showWheel.toggleClass("wheel-btn");
+            $showWheel.toggleClass("wheel-btn-click");
+        });
+        $showWheel.mouseup(function() {
+            $showWheel.toggleClass("wheel-btn");
+            $showWheel.toggleClass("wheel-btn-click");
+        });
+        $showWheel.mouseleave(function() {
+            if ($showWheel.hasClass("wheel-btn")) return;
+            $showWheel.toggleClass("wheel-btn");
+            $showWheel.toggleClass("wheel-btn-click");
+        });
+
+        $startBtn.click(function() {
+            var i = 0, j = 2, k = 4;
+            var interval = setInterval(function() {
+                i = i >= 10 ? 0 : i;
+                j = j >= 10 ? 0 : j;
+                k = k >= 10 ? 0 : k;
+                $num1.numberAnimate({num: i + "", speed: 300});
+                $num2.numberAnimate({num: j + "", speed: 300});
+                $num3.numberAnimate({num: k + "", speed: 300});
+                i++;
+                j++;
+                k++;
+            }, 150);
+            setTimeout(function() {
+                clearInterval(interval);
+                var num = Math.floor(Math.random()*personCount + 1) + "";
+                if (num.length === 1) num = "00" + num;
+                if (num.length === 2) num = "0" + num;
+                $num1.numberAnimate({num: num.charAt(0), speed: 2000});
+                $num2.numberAnimate({num: num.charAt(1), speed: 2000});
+                $num3.numberAnimate({num: num.charAt(2), speed: 2000});
+                setTimeout(function() {
+                    $showWheel.show();
+                    $startBtn.hide();
+                }, 2000)
+            }, 3000);
+        });
     });
 </script>
-</body>
 </html>

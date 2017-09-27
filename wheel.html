@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>幸运转盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="wheelpage.css">
+</head>
+<body>
+<div id="wheel-wrap">
+    <div id="w-tit">
+        幸运大转盘
+    </div>
+    <div id="w-main">
+        <div id="rotate">
+            <div id="pointer" v-on:click="handlebar"></div>
+            <div id="rotatein">
+                <div v-for="obj in rawardList" class="prize">
+                    <strong v-if="!obj.disabled">{{obj.name}}</strong>
+                    <strong v-if="obj.disabled" style="color:#ccc">{{obj.name}}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="/">返回抽取号码</a>
+    <div id="dialogbox">
+        <div class="dialogmask"></div>
+        <div class="dialogcard">
+            <div class="dialogclose">
+                <span class="closebtn"></span>
+            </div>
+            <div class="card1">
+                <div class="dialogtit">恭喜您获得</div>
+                <div class="dialogtit">🎊<strong>{{targetRaward.name}}</strong>🎊</div>
+                <div><img v-bind:src="targetRaward.image" width="150px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    setSize();
+    window.addEventListener("resize",setSize,false);
+    function setSize(){
+        var oHtml = document.getElementsByTagName("html")[0];
+        var oBody = document.getElementsByTagName("body")[0];
+        var oWidth = window.innerWidth < 480 ? window.innerWidth : 480;
+        oHtml.style.fontSize =oWidth/18+"px";
+        oBody.style.visibility = "visible";
+    };
+</script>
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="underscore-min.js"></script>
+<script type="text/javascript" src="vue.min.js"></script>
+
+<script type="text/javascript">
+    var rawardList = [{
+        name: "奖品1",
+        realName: "周大福小金牌",
+        rotate: 337.5,
+        image: "images/jingpai.jpeg",
+        disabled: false
+    },{
+        name: "奖品2",
+        realName: "小米手环",
+        rotate: 292.5,
+        image: "images/xiaomi-shouhuan.png",
+        disabled: false
+    },{
+        name: "奖品3",
+        realName: "小米电子秤",
+        rotate: 247.5,
+        image: "images/xiaomi-dianzicheng.png",
+        disabled: false
+    },{
+        name: "奖品4",
+        realName: "小米移动电源",
+        rotate: 202.5,
+        image: "images/xiaomi-yidongdy.png",
+        disabled: false
+    },{
+        name: "奖品5",
+        realName: "小米移动电源",
+        rotate: 157.5,
+        image: "images/xiaomi-yidongdy.png",
+        disabled: false
+    },{
+        name: "奖品6",
+        realName: "小米移动电源",
+        rotate: 112.5,
+        image: "images/xiaomi-yidongdy.png",
+        disabled: false
+    },{
+        name: "奖品7",
+        realName: "刀具套装",
+        rotate: 67.5,
+        image: "images/daoju.jpeg",
+        disabled: false
+    },{
+        name: "奖品8",
+        realName: "锅子三件套",
+        rotate: 22.5,
+        image: "images/guozisanjiant.jpeg",
+        disabled: false
+    }];
+    //window.localStorage.setItem('raward', JSON.stringify(rawardList));
+    if (!_.isEmpty(window.localStorage.getItem("raward"))) {
+        rawardList = JSON.parse(window.localStorage.getItem("raward"));
+    }
+
+    var emptyObj = {name: '', realName: '', image: ''};
+
+    var app = new Vue({
+        el: "#wheel-wrap",
+        data: {
+            rawardMap: rawardList,
+            initrotate: 0,
+            targetRaward: emptyObj
+        },
+        watch: {
+            targetRaward: function(value) {
+                if (_.isEmpty(value.realName)) {
+                    $("#dialogbox").hide();
+                } else {
+                    $("#dialogbox").show();
+                }
+            }
+        },
+        methods: {
+            raward: function(rotate) {
+                var rawardObj = _.findWhere(this.rawardMap, {rotate: rotate});
+                rawardObj.disabled = true;
+                rawardObj.name = rawardObj.realName;
+                window.localStorage.setItem('raward', JSON.stringify(this.rawardMap));
+                return rawardObj;
+            },
+            handlebar: function() {
+                if (_.findIndex(this.rawardMap, {disabled: false}) < 0) {
+                    return alert("所有奖品已抽完");
+                }
+                var rotate = this.initrotate + (360 - this.initrotate%360) + 360 + this.posibility();
+                $("#rotatein").css({
+                    "-webkit-transition": "all 2s ease-out",
+                    "-ms-transition": "all 2s ease-out",
+                    "transition":" all 2s ease-out",
+                    "-webkit-transform": "rotate("+ rotate +"deg)",
+                    "-moz-transform": "rotate("+ rotate +"deg)",
+                    "-ms-transform": "rotate("+ rotate +"deg)",
+                    "-o-transform": "rotate("+ rotate +"deg)",
+                    "transform":"rotate("+ rotate +"deg)"
+                });
+                this.initrotate = rotate;
+                setTimeout(function() {
+                    app.targetRaward = app.raward(rotate%360);
+                }, 2000);
+            },
+            posibility: function() {
+                var random = parseInt(Math.random()*1000);
+                var posibility = 22.5;
+                if (random == 1) {
+                    posibility = 337.5;
+                } else if ( 1 < random && random <= 40 ) {
+                    posibility = 247.5;
+                } else if( 40 < random && random <= 200 ) {
+                    posibility = 157.5;
+                } else if( 201 < random && random <= 400 ) {
+                    posibility = 67.5;
+                } else if( 401 < random && random <= 550 ) {
+                    posibility = 292.5;
+                } else if( 551 < random && random <= 700) {
+                    posibility = 202.5;
+                } else if( 701 < random && random <= 850) {
+                    posibility = 112.5;
+                }
+                var index = this.getNearestRotate(_.findIndex(this.rawardMap, {rotate: posibility}));
+                return this.rawardMap[index].rotate;
+            },
+            getNearestRotate: function(currentIndex) {
+                if (currentIndex >= this.rawardMap.length) return this.getNearestRotate(0);
+                if (!this.rawardMap[currentIndex].disabled) return currentIndex;
+                return this.getNearestRotate(currentIndex + 1);
+            }
+        }
+    });
+
+    $(function () {
+        //点击
+        $(".closebtn ").click(function () {app.targetRaward = emptyObj;});
+        $(".dialogmask").click(function () {app.targetRaward = emptyObj;});
+    });
+</script>
+</body>
+</html>

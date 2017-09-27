@@ -35,6 +35,11 @@ strong {
 }
 #w-main{
     margin-top: 25px;
+    margin-bottom: 25px;
+}
+a {
+    color: #eea65a;
+    text-decoration: none;
 }
 #rotate{
     position: relative;
@@ -198,6 +203,7 @@ strong {
 }
 
 #pointer{
+    cursor: pointer;
     position: absolute;
     top:50%;
     left:50%;
