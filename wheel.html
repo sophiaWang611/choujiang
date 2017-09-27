@@ -26,14 +26,12 @@
     <div id="dialogbox">
         <div class="dialogmask"></div>
         <div class="dialogcard">
-            <div class="dialogclose">
-                <span class="closebtn"></span>
-            </div>
             <div class="card1">
                 <div class="dialogtit">恭喜您获得</div>
                 <div class="dialogtit">🎊<strong>{{targetRaward.name}}</strong>🎊</div>
-                <div><img v-bind:src="targetRaward.image" width="150px"></div>
+                <div><img v-bind:src="targetRaward.image" width="150px" height="150px"></div>
             </div>
+            <div class="dialogclose">关闭</div>
         </div>
     </div>
 </div>
@@ -54,55 +52,55 @@
 
 <script type="text/javascript">
     var rawardList = [{
-        name: "奖品1",
+        name: "奖品",
         realName: "周大福小金牌",
         rotate: 337.5,
         image: "images/jingpai.jpeg",
         disabled: false
     },{
-        name: "奖品2",
+        name: "奖品",
         realName: "小米手环",
         rotate: 292.5,
         image: "images/xiaomi-shouhuan.png",
         disabled: false
     },{
-        name: "奖品3",
+        name: "奖品",
         realName: "小米电子秤",
         rotate: 247.5,
         image: "images/xiaomi-dianzicheng.png",
         disabled: false
     },{
-        name: "奖品4",
+        name: "奖品",
         realName: "小米移动电源",
         rotate: 202.5,
         image: "images/xiaomi-yidongdy.png",
         disabled: false
     },{
-        name: "奖品5",
-        realName: "小米移动电源",
-        rotate: 157.5,
-        image: "images/xiaomi-yidongdy.png",
-        disabled: false
-    },{
-        name: "奖品6",
-        realName: "小米移动电源",
-        rotate: 112.5,
-        image: "images/xiaomi-yidongdy.png",
-        disabled: false
-    },{
-        name: "奖品7",
+        name: "奖品",
         realName: "刀具套装",
         rotate: 67.5,
         image: "images/daoju.jpeg",
         disabled: false
     },{
-        name: "奖品8",
+        name: "奖品",
+        realName: "小米移动电源",
+        rotate: 112.5,
+        image: "images/xiaomi-yidongdy.png",
+        disabled: false
+    },{
+        name: "奖品",
         realName: "锅子三件套",
         rotate: 22.5,
         image: "images/guozisanjiant.jpeg",
         disabled: false
+    },{
+        name: "奖品",
+        realName: "小米移动电源",
+        rotate: 157.5,
+        image: "images/xiaomi-yidongdy.png",
+        disabled: false
     }];
-    //window.localStorage.setItem('raward', JSON.stringify(rawardList));
+    window.localStorage.setItem('raward', JSON.stringify(rawardList));
     if (!_.isEmpty(window.localStorage.getItem("raward"))) {
         rawardList = JSON.parse(window.localStorage.getItem("raward"));
     }
@@ -184,7 +182,7 @@
 
     $(function () {
         //点击
-        $(".closebtn ").click(function () {app.targetRaward = emptyObj;});
+        $(".dialogclose ").click(function () {app.targetRaward = emptyObj;});
         $(".dialogmask").click(function () {app.targetRaward = emptyObj;});
     });
 </script>
