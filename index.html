@@ -66,17 +66,19 @@
                     #9e7204 85%,
                     #4c3106 100%);
         }
+        #btn-container {
+            position: relative;
+            margin-left: 37%;
+            margin-top: 60px;
+            height: 50px;
+        }
         #start-btn, #wheel-btn {
             color: #fff;
             font-size: 20px;
-            height: 50px;
             width: 200px;
             border-radius: 50px;
             text-align: center;
             line-height: 49px;
-            position: relative;
-            margin-left: 37%;
-            margin-top: 60px;
             cursor: pointer;
         }
         .start-btn {
@@ -159,8 +161,10 @@
                 <li id="num2">0</li>
                 <li id="num3">0</li>
             </ul>
-            <div id="start-btn" class="start-btn">开始摇奖</div>
-            <a id="wheel-btn" href="wheel.html" class="wheel-btn">抽取奖品</a>
+            <div id="btn-container">
+                <div id="start-btn" class="start-btn">开始摇奖</div>
+                <a id="wheel-btn" href="wheel.html" class="wheel-btn">抽取奖品</a>
+            </div>
         </div>
     </div>
 </body>
@@ -261,7 +265,6 @@
     $(function(){
         var $startBtn = $("#start-btn"), $num1 = $("#num1"), $num2 = $("#num2"), $num3 = $("#num3");
         var $showWheel = $("#wheel-btn");
-        var personCount = 300;
 
         $startBtn.show();
         $showWheel.hide();
@@ -294,6 +297,7 @@
         });
 
         $startBtn.click(function() {
+            $startBtn.hide();
             var i = 0, j = 2, k = 4;
             var interval = setInterval(function() {
                 i = i >= 10 ? 0 : i;
@@ -308,7 +312,7 @@
             }, 150);
             setTimeout(function() {
                 clearInterval(interval);
-                var num = Math.floor(Math.random()*personCount + 1) + "";
+                var num = getRandomNum();
                 if (num.length === 1) num = "00" + num;
                 if (num.length === 2) num = "0" + num;
                 $num1.numberAnimate({num: num.charAt(0), speed: 2000});
@@ -316,10 +320,20 @@
                 $num3.numberAnimate({num: num.charAt(2), speed: 2000});
                 setTimeout(function() {
                     $showWheel.show();
-                    $startBtn.hide();
                 }, 2000)
             }, 3000);
         });
     });
+
+    var personCount = 300;
+    function getRandomNum() {
+        var exitNumList = window.localStorage.getItem('existNum');
+        var num = Math.floor(Math.random()*personCount + 1) + "";
+        if (!_.isEmpty(exitNumList) && exitNumList.indexOf(num) !== -1) {
+            return getRandomNum();
+        }
+        window.localStorage.setItem('existNum', exitNumList + "," + num);
+        return num;
+    }
 </script>
 </html>
