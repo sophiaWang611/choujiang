@@ -8,17 +8,17 @@
     <label>
         输入要说的话：
         <input id="text" type="text">
+        <button type="button" onclick="speak()">说话</button>
     </label>
 </body>
-<script type="text/javascript" src="jquery.min.js"></script>
 <script>
-    $(function(){
+    function speak() {
         var msg = new SpeechSynthesisUtterance($("#text").val());
         msg.lang = 'zh-CN';
         msg.voice = speechSynthesis.getVoices().filter(function(voice) {
             return voice.name == 'Google 普通话（中国大陆）';
         })[0];
         speechSynthesis.speak(msg);
-    });
+    }
 </script>
 </html>
